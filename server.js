@@ -66,7 +66,20 @@ app.get('/', (req, res) => {
   res.send('R&N Fastfoods API is running 🍔')
 })
 
-const PORT = process.env.PORT || 5000
-app.listen(PORT, () => {
-  console.log(`🚀 Server running on http://localhost:${PORT}`)
-})
+const PORT = process.env.PORT || 5000;
+
+// Only actually "listen" on a port when running locally.
+// On Vercel, the api/index.js file handles requests instead.
+if (process.env.NODE_ENV !== 'production') {
+  app.listen(PORT, () => {
+    console.log(`🚀 Server running on http://localhost:${PORT}`);
+  });
+}
+
+module.exports = app;
+
+
+// const PORT = process.env.PORT || 5000
+// app.listen(PORT, () => {
+//   console.log(`🚀 Server running on http://localhost:${PORT}`)
+// })
