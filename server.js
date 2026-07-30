@@ -27,11 +27,12 @@
 import 'dotenv/config'
 import express from 'express'
 import cors from 'cors'
-import helmet from 'helmet' // 🆕
-import mongoSanitize from 'express-mongo-sanitize' // 🆕
+import helmet from 'helmet' // new
+//import mongoSanitize from 'express-mongo-sanitize' // new
+import sanitizeMiddleware from './middleware/sanitize.js'
 import connectDB from './config/db.js'
 import apiRoutes from './routes/index.js'
-import { generalLimiter } from './middleware/rateLimiter.js' // 🆕
+import { generalLimiter } from './middleware/rateLimiter.js' // new
 
 // 🆕 Fail fast if critical secrets are missing — better than a confusing
 // crash deep inside jwt.sign() later.
@@ -56,7 +57,9 @@ app.use(cors({
 }))
 
 app.use(express.json({ limit: '10kb' })) // 🆕 limit added — blocks giant payload abuse
-app.use(mongoSanitize()) // 🆕 strips out $ and . from req.body/query/params — kills NoSQL injection attempts
+//app.use(mongoSanitize()) // 🆕 strips out $ and . from req.body/query/params — kills NoSQL injection attempts
+
+app.use(sanitizeMiddleware)
 
 app.use(generalLimiter) // 🆕 applies to every route below this line
 

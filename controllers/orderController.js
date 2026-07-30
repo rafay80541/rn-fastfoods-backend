@@ -97,9 +97,31 @@ export const updateOrderStatus = async (req, res) => {
   }
 }
 
+// export const searchOrders = async (req, res) => {
+//   try {
+//     const { query } = req.query
+//     const orders = await Order.find({
+//       token: { $regex: query, $options: 'i' },
+//     }).sort({ createdAt: -1 })
+//     res.json(orders)
+//   } catch (error) {
+//     res.status(500).json({ message: error.message })
+//   }
+// }
+
+
 export const searchOrders = async (req, res) => {
   try {
     const { query } = req.query
+
+    // 🆕 Since req.query itself can no longer be sanitized directly
+    // (Express 5 restriction), we validate its type here instead —
+    // rejects any non-string/object-injection attempt before it
+    // reaches the database.
+    if (typeof query !== 'string') {
+      return res.status(400).json({ message: 'Invalid search query' })
+    }
+
     const orders = await Order.find({
       token: { $regex: query, $options: 'i' },
     }).sort({ createdAt: -1 })
@@ -108,6 +130,7 @@ export const searchOrders = async (req, res) => {
     res.status(500).json({ message: error.message })
   }
 }
+
 
 // 🆕 NEW: DELETE /api/orders/reset — wipes every order from the database.
 // Protected by authMiddleware in the route file, so only a logged-in
