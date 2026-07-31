@@ -55,7 +55,7 @@ app.use(helmet()) // 🆕 sets a batch of protective HTTP headers automatically
 
 // 🆕 CORS locked to your actual frontend, not the whole internet
 app.use(cors({
-  origin: process.env.FRONTEND_URL || 'http://localhost:5173',
+  origin: 'https://rn-fastfoods-frontend.vercel.app',
   credentials: true,
 }))
 
