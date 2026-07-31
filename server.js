@@ -46,6 +46,9 @@ for (const key of requiredEnvVars) {
 
 const app = express()
 
+
+app.set('trust proxy', 1) // 🆕 REQUIRED on Vercel — tells Express to trust Vercel's proxy headers, fixes express-rate-limit crashing on every request
+
 connectDB()
 
 app.use(helmet()) // 🆕 sets a batch of protective HTTP headers automatically
